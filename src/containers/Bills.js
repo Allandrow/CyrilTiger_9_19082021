@@ -30,40 +30,6 @@ export default class {
     $('#modaleFile').modal('show');
   };
 
-  sortByDate = (a, b) => {
-    let dateA = new Date(a.date);
-    let dateB = new Date(b.date);
-    let isDateAValid = isFinite(dateA.getTime());
-    let isDateBValid = isFinite(dateB.getTime());
-
-    // both dates are valid - return comparison
-    if (isDateAValid && isDateBValid) return dateB - dateA;
-
-    // date A invalid
-    if (!isDateAValid) {
-      // can be fixed
-      if (a.date.includes('/')) {
-        const dateSplit = a.date.split('/');
-        const fixedDate = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
-        dateA = new Date(fixedDate);
-      } else {
-        return -1;
-      }
-    }
-    // date B invalid
-    if (!isDateBValid) {
-      // can be fixed
-      if (b.date.includes('/')) {
-        const dateSplit = b.date.split('/');
-        const fixedDate = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
-        dateB = new Date(fixedDate);
-      } else {
-        return 1;
-      }
-    }
-    return dateB - dateA;
-  };
-
   // not need to cover this function by tests
   getBills = () => {
     const userEmail = localStorage.getItem('user')
@@ -75,27 +41,25 @@ export default class {
         .get()
         .then((snapshot) => {
           const bills = snapshot.docs
-            .map((doc) => doc.data())
-            .sort(this.sortByDate)
-            .map((bill) => {
+            .map((doc) => {
               try {
                 return {
-                  ...bill
-                  // date: formatDate(bill.date),
-                  // status: formatStatus(bill.status)
+                  ...doc.data(),
+                  date: formatDate(doc.date),
+                  status: formatStatus(doc.status)
                 };
               } catch (e) {
                 // if for some reason, corrupted data was introduced, we manage here failing formatDate function
                 // log the error and return unformatted date in that case
-                // console.log(e, 'for', bill);
+                console.log(e, 'for', doc.data());
                 return {
-                  ...bill,
-                  date: bill.date,
-                  status: formatStatus(bill.status)
+                  ...doc.data(),
+                  date: doc.data().date,
+                  status: formatStatus(doc.status)
                 };
               }
-            });
-          // .filter((bill) => bill.email === userEmail);
+            })
+            .filter((bill) => bill.email === userEmail);
           console.log('length', bills.length);
           return bills;
         })
