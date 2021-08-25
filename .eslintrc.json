@@ -10,5 +10,8 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "rules": {}
+  "rules": {
+    "jest-dom/prefer-in-document": "warn",
+    "dot-notation": "warn"
+  }
 }
