@@ -22,7 +22,14 @@ describe('Given I am connected as an employee', () => {
     test('if a loading parameter is given, then the page should display a loading text', () => {
       const html = BillsUI({ loading: true })
       document.body.innerHTML = html
-      // const loading = screen.getAllByAltText()
+      const loading = screen.getByText(/Loading.../)
+      expect(loading).toBeTruthy()
+    })
+    test('if an error parameter is given, then the page should display an error element', () => {
+      const html = BillsUI({ error: 'some error message' })
+      document.body.innerHTML = html
+      const error = screen.getByTestId('error-message')
+      expect(error).toBeTruthy()
     })
   })
 })
