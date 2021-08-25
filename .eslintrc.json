@@ -1,0 +1,14 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest/globals": true
+  },
+  "plugins": ["jest", "testing-library", "jest-dom"],
+  "extends": ["standard", "plugin:testing-library/dom", "plugin:jest-dom/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {}
+}
