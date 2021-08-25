@@ -1,6 +1,8 @@
 import { screen } from '@testing-library/dom'
 import BillsUI from '../views/BillsUI.js'
 import { bills } from '../fixtures/bills.js'
+import { Bills } from '../containers/Bills.js'
+import { ROUTES } from '../constants/routes'
 
 describe('Given I am connected as an employee', () => {
   describe('When I am on Bills Page', () => {
@@ -30,6 +32,14 @@ describe('Given I am connected as an employee', () => {
       document.body.innerHTML = html
       const error = screen.getByTestId('error-message')
       expect(error).toBeTruthy()
+    })
+
+    describe('When I click on the new bill button', () => {
+      test('Then a from should be displayed', () => {
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname })
+        }
+      })
     })
   })
 })
