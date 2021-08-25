@@ -12,6 +12,7 @@
   },
   "rules": {
     "jest-dom/prefer-in-document": "warn",
-    "dot-notation": "warn"
+    "dot-notation": "warn",
+    "no-new": "off"
   }
 }
