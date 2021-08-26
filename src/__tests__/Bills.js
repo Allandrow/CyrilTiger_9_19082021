@@ -1,8 +1,10 @@
 import { screen } from '@testing-library/dom'
 import BillsUI from '../views/BillsUI.js'
 import { bills } from '../fixtures/bills.js'
-import { Bills } from '../containers/Bills.js'
+import Bills from '../containers/Bills.js'
 import { ROUTES } from '../constants/routes'
+import { localStorageMock } from '../__mocks__/localStorage.js'
+import userEvent from '@testing-library/user-event'
 
 describe('Given I am connected as an employee', () => {
   describe('When I am on Bills Page', () => {
@@ -33,13 +35,37 @@ describe('Given I am connected as an employee', () => {
       const error = screen.getByTestId('error-message')
       expect(error).toBeTruthy()
     })
-
     describe('When I click on the new bill button', () => {
-      test('Then a from should be displayed', () => {
+      test('Then it should render a new bill form', () => {
+        const html = BillsUI({ data: bills })
+        document.body.innerHTML = html
+
         const onNavigate = (pathname) => {
           document.body.innerHTML = ROUTES({ pathname })
         }
+
+        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+        window.localStorage.setItem(
+          'user',
+          JSON.stringify({
+            type: 'Employee'
+          })
+        )
+        const billsObj = new Bills({
+          document,
+          onNavigate,
+          firestore: null,
+          localStorage: window.localStorage
+        })
+
+        const newBillBtn = screen.getByTestId('btn-new-bill')
+        const handleClickNewBill = jest.fn((e) => billsObj.handleClickNewBill(e))
+        newBillBtn.addEventListener('click', handleClickNewBill)
+        userEvent.click(newBillBtn)
+        expect(handleClickNewBill).toHaveBeenCalled()
+        expect(screen.getByTestId('form-new-bill')).toBeTruthy()
       })
     })
+    describe('When i click', () => {})
   })
 })
