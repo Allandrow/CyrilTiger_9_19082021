@@ -66,6 +66,39 @@ describe('Given I am connected as an employee', () => {
         expect(screen.getByTestId('form-new-bill')).toBeTruthy()
       })
     })
-    describe('When i click', () => {})
+    describe('When i click on an eye icon', () => {
+      test('Then it should render a modal with an image', () => {
+        const html = BillsUI({ data: bills })
+        document.body.innerHTML = html
+
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname })
+        }
+
+        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+        window.localStorage.setItem(
+          'user',
+          JSON.stringify({
+            type: 'Employee'
+          })
+        )
+        const billsObj = new Bills({
+          document,
+          onNavigate,
+          firestore: null,
+          localStorage: window.localStorage
+        })
+
+        $.fn.modal = jest.fn()
+
+        const eyeIcons = screen.getAllByTestId('icon-eye')
+        const handleClickIconEye = jest.fn((e) => billsObj.handleClickIconEye)
+        eyeIcons.forEach((icon) => icon.addEventListener('click', () => handleClickIconEye(icon)))
+        userEvent.click(eyeIcons[0])
+        expect(handleClickIconEye).toHaveBeenCalled()
+        const dialogText = screen.getByText('Justificatif')
+        expect(dialogText).toBeTruthy()
+      })
+    })
   })
 })
