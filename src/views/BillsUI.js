@@ -1,8 +1,8 @@
-import VerticalLayout from './VerticalLayout.js';
-import ErrorPage from './ErrorPage.js';
-import LoadingPage from './LoadingPage.js';
+import VerticalLayout from './VerticalLayout.js'
+import ErrorPage from './ErrorPage.js'
+import LoadingPage from './LoadingPage.js'
 
-import Actions from './Actions.js';
+import Actions from './Actions.js'
 
 const row = (bill) => {
   return `
@@ -16,12 +16,12 @@ const row = (bill) => {
         ${Actions(bill.fileUrl)}
       </td>
     </tr>
-    `;
-};
+    `
+}
 
 const rows = (data) => {
-  return data && data.length ? data.map((bill) => row(bill)).join('') : '';
-};
+  return data && data.length ? data.map((bill) => row(bill)).join('') : ''
+}
 
 export default ({ data: bills, loading, error }) => {
   const modal = () => `
@@ -39,16 +39,16 @@ export default ({ data: bills, loading, error }) => {
         </div>
       </div>
     </div>
-  `;
+  `
 
   if (loading) {
-    return LoadingPage();
+    return LoadingPage()
   } else if (error) {
-    return ErrorPage(error);
+    return ErrorPage(error)
   }
 
   if (bills) {
-    bills.sort((a, b) => new Date(b.date) - new Date(a.date));
+    bills.sort((a, b) => new Date(b.date) - new Date(a.date))
   }
 
   return `
@@ -78,5 +78,5 @@ export default ({ data: bills, loading, error }) => {
         </div>
       </div>
       ${modal()}
-    </div>`;
-};
+    </div>`
+}
