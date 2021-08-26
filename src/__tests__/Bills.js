@@ -67,7 +67,7 @@ describe('Given I am connected as an employee', () => {
       })
     })
     describe('When i click on an eye icon', () => {
-      test('Then it should render a modal with an image', () => {
+      test('Then it should render a modal', () => {
         const html = BillsUI({ data: bills })
         document.body.innerHTML = html
 
