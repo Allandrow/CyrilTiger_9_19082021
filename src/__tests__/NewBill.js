@@ -18,7 +18,8 @@ describe('Given I am connected as an employee', () => {
     window.localStorage.setItem(
       'user',
       JSON.stringify({
-        type: 'Employee'
+        type: 'Employee',
+        email: 'cedric.hiely@billed.com'
       })
     )
     newBill = new NewBill({
@@ -31,13 +32,13 @@ describe('Given I am connected as an employee', () => {
 
   describe('When I am on NewBill Page', () => {
     test('Then i can attach a jpg/jpeg/png file to the form via an input', () => {
+      // TODO : reassess what the test should do
       const file = new File(['test'], 'test.png', { type: 'image/png' })
       const input = screen.getByTestId('file')
       const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e))
       input.addEventListener('change', handleChangeFile)
-      userEvent.upload(input, file)
+      userEvent.upload(input, file, true)
       expect(handleChangeFile).toHaveBeenCalled()
     })
-    test('Then if the form is filled i can submit it', () => {})
   })
 })

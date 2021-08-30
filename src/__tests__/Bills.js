@@ -5,8 +5,33 @@ import Bills from '../containers/Bills.js'
 import { ROUTES } from '../constants/routes'
 import { localStorageMock } from '../__mocks__/localStorage.js'
 import userEvent from '@testing-library/user-event'
+import firebase from '../__mocks__/firebase.js'
+import DashboardUI from '../views/DashboardUI.js'
 
 describe('Given I am connected as an employee', () => {
+  // test d'intégration GET
+  describe('When I navigate to Bills', () => {
+    test('fetches bills from mock API GET', async () => {
+      const getSpy = jest.spyOn(firebase, 'get')
+      const bills = await firebase.get()
+      expect(getSpy).toHaveBeenCalledTimes(1)
+      expect(bills.data.length).toBe(4)
+    })
+    test('fetches bills from an API and fails with 404 message error', async () => {
+      firebase.get.mockImplementationOnce(() => Promise.reject(new Error('Erreur 404')))
+      const html = DashboardUI({ error: 'Erreur 404' })
+      document.body.innerHTML = html
+      const message = screen.getByText(/Erreur 404/)
+      expect(message).toBeTruthy()
+    })
+    test('fetches messages from an API and fails with 500 message error', async () => {
+      firebase.get.mockImplementationOnce(() => Promise.reject(new Error('Erreur 500')))
+      const html = DashboardUI({ error: 'Erreur 500' })
+      document.body.innerHTML = html
+      const message = screen.getByText(/Erreur 500/)
+      expect(message).toBeTruthy()
+    })
+  })
   describe('When I am on Bills Page', () => {
     test('Then bill icon in vertical layout should be highlighted', () => {
       const html = BillsUI({ data: [] })
