@@ -6,28 +6,31 @@ import { localStorageMock } from '../__mocks__/localStorage.js'
 import userEvent from '@testing-library/user-event'
 
 describe('Given I am connected as an employee', () => {
+  let newBill
+  beforeAll(() => {
+    const html = NewBillUI()
+    document.body.innerHTML = html
+
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname })
+    }
+    Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+    window.localStorage.setItem(
+      'user',
+      JSON.stringify({
+        type: 'Employee'
+      })
+    )
+    newBill = new NewBill({
+      document,
+      onNavigate,
+      firestore: null,
+      localStorage: window.localStorage
+    })
+  })
+
   describe('When I am on NewBill Page', () => {
     test('Then i can attach a jpg/jpeg/png file to the form via an input', () => {
-      const html = NewBillUI()
-      document.body.innerHTML = html
-
-      const onNavigate = (pathname) => {
-        document.body.innerHTML = ROUTES({ pathname })
-      }
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-      window.localStorage.setItem(
-        'user',
-        JSON.stringify({
-          type: 'Employee'
-        })
-      )
-      const newBill = new NewBill({
-        document,
-        onNavigate,
-        firestore: null,
-        localStorage: window.localStorage
-      })
-
       const file = new File(['test'], 'test.png', { type: 'image/png' })
       const input = screen.getByTestId('file')
       const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e))
@@ -35,5 +38,6 @@ describe('Given I am connected as an employee', () => {
       userEvent.upload(input, file)
       expect(handleChangeFile).toHaveBeenCalled()
     })
+    test('Then if the form is filled i can submit it', () => {})
   })
 })
