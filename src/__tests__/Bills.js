@@ -32,6 +32,7 @@ describe('Given I am connected as an employee', () => {
       expect(message).toBeTruthy()
     })
   })
+
   describe('When I am on Bills Page', () => {
     test('Then bill icon in vertical layout should be highlighted', () => {
       const html = BillsUI({ data: [] })
