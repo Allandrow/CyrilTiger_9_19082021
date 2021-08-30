@@ -4,7 +4,6 @@ import NewBill from '../containers/NewBill.js'
 import { ROUTES } from '../constants/routes'
 import { localStorageMock } from '../__mocks__/localStorage.js'
 import userEvent from '@testing-library/user-event'
-import pct from '../assets/svg/pct.js'
 
 describe('Given I am connected as an employee', () => {
   let newBill
