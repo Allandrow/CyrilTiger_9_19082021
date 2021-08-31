@@ -8,7 +8,7 @@ export default class {
     this.onNavigate = onNavigate
     this.firestore = firestore
     const buttonNewBill = document.querySelector('button[data-testid="btn-new-bill"]')
-    if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)
+    if (buttonNewBill) buttonNewBill.addEventListener('click', (e) => this.handleClickNewBill(e))
     const iconEye = document.querySelectorAll('div[data-testid="icon-eye"]')
     if (iconEye) {
       iconEye.forEach((icon) => {
