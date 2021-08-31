@@ -19,8 +19,8 @@ export default class NewBill {
     const file = this.document.querySelector('input[data-testid="file"]').files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length - 1]
-    const sep = fileName.indexOf('.')
-    const fileExtension = fileName.substring(sep)
+    const fileSeparated = fileName.split('.')
+    const fileExtension = fileSeparated[fileSeparated.length - 1]
     const validExtensions = ['.jpg', '.jpeg', '.png']
     if (!validExtensions.includes(fileExtension)) {
       alert('Invalid file type')
