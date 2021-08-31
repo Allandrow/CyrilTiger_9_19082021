@@ -21,7 +21,6 @@ export default class NewBill {
     const fileName = filePath[filePath.length - 1]
     const fileSeparated = fileName.split('.')
     const fileExtension = fileSeparated[fileSeparated.length - 1]
-    console.log(fileExtension)
     const validExtensions = ['jpg', 'jpeg', 'png']
     if (!validExtensions.includes(fileExtension)) {
       alert('Invalid file type')
