@@ -14,7 +14,7 @@
   },
   "rules": {
     "jest-dom/prefer-in-document": "warn",
-    "dot-notation": "warn",
+    "dot-notation": "off",
     "no-new": "off",
     "space-before-function-paren": "off"
   }
