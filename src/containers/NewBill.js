@@ -26,6 +26,7 @@ export default class NewBill {
       alert('Invalid file type')
       this.fileName = null
       this.fileUrl = null
+      e.target.value = ''
       return
     }
     this.firestore.storage
