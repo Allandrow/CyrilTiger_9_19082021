@@ -31,16 +31,17 @@ describe('Given I am connected as an employee', () => {
   })
 
   describe('When I am on NewBill Page', () => {
-    test('Then i can attach a jpg/jpeg/png file to the form via an input', () => {
+    test('Then I can attach a jpg/jpeg/png file to the form via an input', () => {
       // TODO : reassess what the test should do
       const file = new File(['test'], 'test.png', { type: 'image/png' })
       const input = screen.getByTestId('file')
+      // const spy = jest.spyOn
       const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e))
       input.addEventListener('change', handleChangeFile)
       userEvent.upload(input, file, true)
       expect(handleChangeFile).toHaveBeenCalled()
     })
-    test('Then i can submit a correctly filled form', () => {
+    test('Then I can submit a correctly filled form', () => {
       // required inputs : select (expense-type), date (datepicker), amount (amount), pct (pct), file (file)
       const select = screen.getByTestId('expense-type')
       const dateInput = screen.getByTestId('datepicker')
@@ -55,10 +56,10 @@ describe('Given I am connected as an employee', () => {
       pctInput.value = '20'
 
       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e))
-      const form = screen.getByTestId('form-new-bill')
+      const form = screen.getByRole('form')
       form.addEventListener('submit', handleSubmit)
       fireEvent.submit(form)
-      expect(handleSubmit).toHaveBeenCalledTimes(1)
+      expect(handleSubmit).toHaveBeenCalled()
     })
   })
 })
