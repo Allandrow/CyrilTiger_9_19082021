@@ -6,7 +6,6 @@ import { ROUTES } from '../constants/routes'
 import { localStorageMock } from '../__mocks__/localStorage.js'
 import userEvent from '@testing-library/user-event'
 import firebase from '../__mocks__/firebase.js'
-import DashboardUI from '../views/DashboardUI.js'
 
 describe('Given I am connected as an employee', () => {
   // test d'intégration GET
@@ -19,14 +18,14 @@ describe('Given I am connected as an employee', () => {
     })
     test('fetches bills from an API and fails with 404 message error', async () => {
       firebase.get.mockImplementationOnce(() => Promise.reject(new Error('Erreur 404')))
-      const html = DashboardUI({ error: 'Erreur 404' })
+      const html = BillsUI({ error: 'Erreur 404' })
       document.body.innerHTML = html
       const message = screen.getByText(/Erreur 404/)
       expect(message).toBeTruthy()
     })
     test('fetches messages from an API and fails with 500 message error', async () => {
       firebase.get.mockImplementationOnce(() => Promise.reject(new Error('Erreur 500')))
-      const html = DashboardUI({ error: 'Erreur 500' })
+      const html = BillsUI({ error: 'Erreur 500' })
       document.body.innerHTML = html
       const message = screen.getByText(/Erreur 500/)
       expect(message).toBeTruthy()
@@ -84,11 +83,12 @@ describe('Given I am connected as an employee', () => {
           localStorage: window.localStorage
         })
 
+        const spy = jest.spyOn(billsObj, 'handleClickNewBill')
         const newBillBtn = screen.getByTestId('btn-new-bill')
-        const handleClickNewBill = jest.fn((e) => billsObj.handleClickNewBill(e))
-        newBillBtn.addEventListener('click', handleClickNewBill)
+        // const handleClickNewBill = jest.fn((e) => billsObj.handleClickNewBill(e))
+        // newBillBtn.addEventListener('click', handleClickNewBill)
         userEvent.click(newBillBtn)
-        expect(handleClickNewBill).toHaveBeenCalled()
+        expect(spy).toHaveBeenCalled()
         expect(screen.getByTestId('form-new-bill')).toBeTruthy()
       })
     })
@@ -108,7 +108,7 @@ describe('Given I am connected as an employee', () => {
             type: 'Employee'
           })
         )
-        const billsObj = new Bills({
+        const billsInstance = new Bills({
           document,
           onNavigate,
           firestore: null,
@@ -118,10 +118,11 @@ describe('Given I am connected as an employee', () => {
         $.fn.modal = jest.fn()
 
         const eyeIcons = screen.getAllByTestId('icon-eye')
-        const handleClickIconEye = jest.fn((e) => billsObj.handleClickIconEye)
+        const handleClickIconEye = jest.fn((e) => billsInstance.handleClickIconEye)
         eyeIcons.forEach((icon) => icon.addEventListener('click', () => handleClickIconEye(icon)))
         userEvent.click(eyeIcons[0])
         expect(handleClickIconEye).toHaveBeenCalled()
+        // TODO : change expectation to toBeVisible instead of relying on text in modal
         const dialogText = screen.getByText('Justificatif')
         expect(dialogText).toBeTruthy()
       })
