@@ -106,15 +106,11 @@ describe('Given I am connected as an employee', () => {
           localStorage: window.localStorage
         })
 
-        // TODO : change mock to use spyOn
         $.fn.modal = jest.fn()
-
+        const spy = jest.spyOn(billsInstance, 'handleClickIconEye')
         const eyeIcons = screen.getAllByTestId('icon-eye')
-        const handleClickIconEye = jest.fn((e) => billsInstance.handleClickIconEye(e))
-        eyeIcons.forEach((icon) => icon.addEventListener('click', () => handleClickIconEye(icon)))
         userEvent.click(eyeIcons[0])
-        expect(handleClickIconEye).toHaveBeenCalled()
-
+        expect(spy).toHaveBeenCalled()
         const dialog = screen.getByRole('dialog', { hidden: true })
         expect(dialog).toBeVisible()
       })
