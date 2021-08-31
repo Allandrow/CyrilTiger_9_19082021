@@ -45,15 +45,14 @@ describe('Given I am connected as an employee', () => {
     test('if a loading parameter is given, then the page should display a loading text', () => {
       const html = BillsUI({ loading: true })
       document.body.innerHTML = html
-      const loading = screen.getByText(/Loading.../)
-      expect(loading).toBeTruthy()
+      expect(screen.getByText(/Loading.../)).toBeInTheDocument()
     })
     test('if an error parameter is given, then the page should display an error element', () => {
       const html = BillsUI({ error: 'some error message' })
       document.body.innerHTML = html
-      const error = screen.getByTestId('error-message')
-      expect(error).toBeTruthy()
+      expect(screen.getByText(/some error message/)).toBeInTheDocument()
     })
+
     describe('When I click on the new bill button', () => {
       test('Then it should render a new bill form', () => {
         const html = BillsUI({ data: bills })
@@ -70,20 +69,18 @@ describe('Given I am connected as an employee', () => {
             type: 'Employee'
           })
         )
-        const billsObj = new Bills({
+        const billsInstance = new Bills({
           document,
           onNavigate,
           firestore: null,
           localStorage: window.localStorage
         })
 
-        const spy = jest.spyOn(billsObj, 'handleClickNewBill')
+        const spy = jest.spyOn(billsInstance, 'handleClickNewBill')
         const newBillBtn = screen.getByTestId('btn-new-bill')
-        // const handleClickNewBill = jest.fn((e) => billsObj.handleClickNewBill(e))
-        // newBillBtn.addEventListener('click', handleClickNewBill)
         userEvent.click(newBillBtn)
         expect(spy).toHaveBeenCalled()
-        expect(screen.getByTestId('form-new-bill')).toBeTruthy()
+        expect(screen.getByTestId('form-new-bill')).toBeInTheDocument()
       })
     })
     describe('When i click on an eye icon', () => {
@@ -109,16 +106,17 @@ describe('Given I am connected as an employee', () => {
           localStorage: window.localStorage
         })
 
+        // TODO : change mock to use spyOn
         $.fn.modal = jest.fn()
 
         const eyeIcons = screen.getAllByTestId('icon-eye')
-        const handleClickIconEye = jest.fn((e) => billsInstance.handleClickIconEye)
+        const handleClickIconEye = jest.fn((e) => billsInstance.handleClickIconEye(e))
         eyeIcons.forEach((icon) => icon.addEventListener('click', () => handleClickIconEye(icon)))
         userEvent.click(eyeIcons[0])
         expect(handleClickIconEye).toHaveBeenCalled()
-        // TODO : change expectation to toBeVisible instead of relying on text in modal
-        const dialogText = screen.getByText('Justificatif')
-        expect(dialogText).toBeTruthy()
+
+        const dialog = screen.getByRole('dialog', { hidden: true })
+        expect(dialog).toBeVisible()
       })
     })
   })
