@@ -25,6 +25,7 @@ export default class NewBill {
     const fileExtension = fileSeparated[fileSeparated.length - 1]
     const validExtensions = ['jpg', 'jpeg', 'png']
     if (validExtensions.includes(fileExtension)) {
+      /* istanbul ignore next */
       this.firestore.storage
         .ref(`justificatifs/${fileName}`)
         .put(file)
@@ -33,12 +34,12 @@ export default class NewBill {
           this.fileUrl = url
           this.fileName = fileName
         })
-      return
+    } else {
+      this.fileName = null
+      this.fileUrl = null
+      e.target.value = ''
+      errorText.classList.add('error-show')
     }
-    this.fileName = null
-    this.fileUrl = null
-    e.target.value = ''
-    errorText.classList.add('error-show')
   }
 
   handleSubmit = (e) => {
@@ -66,6 +67,7 @@ export default class NewBill {
   }
 
   // not need to cover this function by tests
+  /* istanbul ignore next */
   createBill = (bill) => {
     if (this.firestore) {
       this.firestore
