@@ -49,19 +49,20 @@ describe('Given I am connected as an employee', () => {
       expect(input.files[0]).toStrictEqual(file)
       expect(input.files).toHaveLength(1)
     })
+    test('Then i cannot attach a file other than an image to the form', () => {
+      const file = new File(['wrongTest'], 'wrongfile.pdf', { type: 'application/pdf' })
+      const spy = jest.spyOn(newBill, 'handleChangeFile')
+      const input = screen.getByTestId('file')
+      userEvent.upload(input, file)
+      expect(spy).toHaveBeenCalled()
+      expect(input.value).toBe('')
+      expect(
+        screen.getByText(/Votre justificatif doit être de type jpg, jpeg ou png/)
+      ).toBeVisible()
+    })
   })
 
   // describe('When I am on NewBill Page', () => {
-  //   test('Then I can attach a jpg/jpeg/png file to the form via an input', () => {
-  //     // TODO : reassess what the test should do
-  //     const file = new File(['test'], 'test.png', { type: 'image/png' })
-  //     const input = screen.getByTestId('file')
-  //     // const spy = jest.spyOn
-  //     const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e))
-  //     input.addEventListener('change', handleChangeFile)
-  //     userEvent.upload(input, file, true)
-  //     expect(handleChangeFile).toHaveBeenCalled()
-  //   })
   //   test('Then I can submit a correctly filled form', () => {
   //     // TODO : reassess what this test should do
   //     // required inputs : select (expense-type), date (datepicker), amount (amount), pct (pct), file (file)

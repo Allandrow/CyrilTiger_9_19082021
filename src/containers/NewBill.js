@@ -7,36 +7,38 @@ export default class NewBill {
     this.onNavigate = onNavigate
     this.firestore = firestore
     const formNewBill = this.document.querySelector('form[data-testid="form-new-bill"]')
-    formNewBill.addEventListener('submit', this.handleSubmit)
+    formNewBill.addEventListener('submit', (e) => this.handleSubmit(e))
     const file = this.document.querySelector('input[data-testid="file"]')
-    file.addEventListener('change', this.handleChangeFile)
+    file.addEventListener('change', (e) => this.handleChangeFile(e))
     this.fileUrl = null
     this.fileName = null
     new Logout({ document, localStorage, onNavigate })
   }
 
   handleChangeFile = (e) => {
+    const errorText = this.document.querySelector('.error')
+    errorText.classList.remove('error-show')
     const file = this.document.querySelector('input[data-testid="file"]').files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length - 1]
     const fileSeparated = fileName.split('.')
     const fileExtension = fileSeparated[fileSeparated.length - 1]
     const validExtensions = ['jpg', 'jpeg', 'png']
-    if (!validExtensions.includes(fileExtension)) {
-      alert('Invalid file type')
-      this.fileName = null
-      this.fileUrl = null
-      e.target.value = ''
+    if (validExtensions.includes(fileExtension)) {
+      this.firestore.storage
+        .ref(`justificatifs/${fileName}`)
+        .put(file)
+        .then((snapshot) => snapshot.ref.getDownloadURL())
+        .then((url) => {
+          this.fileUrl = url
+          this.fileName = fileName
+        })
       return
     }
-    this.firestore.storage
-      .ref(`justificatifs/${fileName}`)
-      .put(file)
-      .then((snapshot) => snapshot.ref.getDownloadURL())
-      .then((url) => {
-        this.fileUrl = url
-        this.fileName = fileName
-      })
+    this.fileName = null
+    this.fileUrl = null
+    e.target.value = ''
+    errorText.classList.add('error-show')
   }
 
   handleSubmit = (e) => {
@@ -58,9 +60,6 @@ export default class NewBill {
       fileUrl: this.fileUrl,
       fileName: this.fileName,
       status: 'pending'
-    }
-    if (!bill.fileUrl || !bill.fileName) {
-      return
     }
     this.createBill(bill)
     this.onNavigate(ROUTES_PATH['Bills'])
