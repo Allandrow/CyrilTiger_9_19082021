@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event'
 import firebase from '../__mocks__/firebase.js'
 
 describe('Given I am connected as an employee', () => {
-  // test d'intégration GET
+  // Integration test for GET
   describe('When I navigate to Bills', () => {
     test('fetches bills from mock API GET', async () => {
       const getSpy = jest.spyOn(firebase, 'get')
