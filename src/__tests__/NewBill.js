@@ -5,6 +5,8 @@ import NewBill from '../containers/NewBill.js'
 import { ROUTES } from '../constants/routes'
 import { localStorageMock } from '../__mocks__/localStorage.js'
 import userEvent from '@testing-library/user-event'
+import firebase from '../__mocks__/firebase.js'
+import BillsUI from '../views/BillsUI.js'
 
 describe('Given I am connected as an employee', () => {
   // Setup newBill instance
@@ -96,6 +98,50 @@ describe('Given I am connected as an employee', () => {
         expect(spy).toHaveBeenCalled()
         expect(spyCreateBill).toHaveBeenCalledWith(validBill)
       })
+    })
+  })
+
+  // Integration Test for POST
+  describe('When I post a new bill', () => {
+    let bill
+    beforeAll(() => {
+      bill = [
+        {
+          id: 'BeKy5Mo4jkmdfPGYpTxZ',
+          vat: '',
+          amount: 100,
+          name: 'new test',
+          fileName: 'test.jpeg',
+          commentary: 'post test',
+          pct: 20,
+          type: 'Transports',
+          email: 'abc@test.com',
+          fileUrl:
+            'https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…61.jpeg?alt=media&token=7685cd61-c112-42bc-9929-8a799bb82d8b',
+          date: '2021-09-02',
+          status: 'Pending'
+        }
+      ]
+    })
+    test('fetches bills from mock API GET and add new bill to bills', async () => {
+      const getSpy = jest.spyOn(firebase, 'get')
+      const bills = await firebase.get()
+      expect(getSpy).toHaveBeenCalledTimes(1)
+      expect(bills.data.length).toBe(4)
+      bills.data.push(bill)
+      expect(bills.data.length).toBe(5)
+    })
+    test('fetches bills from an API and fails with 404 message error', async () => {
+      firebase.get.mockImplementationOnce(() => Promise.reject(new Error('Erreur 404')))
+      const html = BillsUI({ error: 'Erreur 404' })
+      document.body.innerHTML = html
+      expect(screen.getByText(/Erreur 404/)).toBeInTheDocument()
+    })
+    test('fetches messages from an API and fails with 500 message error', async () => {
+      firebase.get.mockImplementationOnce(() => Promise.reject(new Error('Erreur 500')))
+      const html = BillsUI({ error: 'Erreur 500' })
+      document.body.innerHTML = html
+      expect(screen.getByText(/Erreur 500/)).toBeInTheDocument()
     })
   })
 })
