@@ -31,30 +31,31 @@ describe('Given I am connected as an employee', () => {
     })
   })
 
-  describe('When I am on Bills Page', () => {
-    test('Then bills should be ordered from earliest to latest', () => {
-      const html = BillsUI({ data: bills })
-      document.body.innerHTML = html
-      const dates = screen
-        .getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i)
-        .map((a) => a.innerHTML)
-      const antiChrono = (a, b) => (a < b ? 1 : -1)
-      const datesSorted = [...dates].sort(antiChrono)
-      expect(dates).toEqual(datesSorted)
+  describe('When I arrive on Bills Page', () => {
+    describe('When a paramater other than bills is given to the UI', () => {
+      test('if a loading parameter is given, then the page should display a loading text', () => {
+        const html = BillsUI({ loading: true })
+        document.body.innerHTML = html
+        expect(screen.getByText(/Loading.../)).toBeInTheDocument()
+      })
+      test('if an error parameter is given, then the page should display an error element', () => {
+        const html = BillsUI({ error: 'some error message' })
+        document.body.innerHTML = html
+        expect(screen.getByText(/some error message/)).toBeInTheDocument()
+      })
     })
-    test('if a loading parameter is given, then the page should display a loading text', () => {
-      const html = BillsUI({ loading: true })
-      document.body.innerHTML = html
-      expect(screen.getByText(/Loading.../)).toBeInTheDocument()
-    })
-    test('if an error parameter is given, then the page should display an error element', () => {
-      const html = BillsUI({ error: 'some error message' })
-      document.body.innerHTML = html
-      expect(screen.getByText(/some error message/)).toBeInTheDocument()
-    })
-
-    describe('When I click on the new bill button', () => {
-      test('Then it should render a new bill form', () => {
+    describe('When the page is rendered with bills', () => {
+      test('Then bills should be ordered from earliest to latest', () => {
+        const html = BillsUI({ data: bills })
+        document.body.innerHTML = html
+        const dates = screen
+          .getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i)
+          .map((a) => a.innerHTML)
+        const antiChrono = (a, b) => (a < b ? 1 : -1)
+        const datesSorted = [...dates].sort(antiChrono)
+        expect(dates).toEqual(datesSorted)
+      })
+      test('Then I can click on new bill button to render a form', () => {
         const html = BillsUI({ data: bills })
         document.body.innerHTML = html
 
@@ -82,9 +83,7 @@ describe('Given I am connected as an employee', () => {
         expect(spy).toHaveBeenCalled()
         expect(screen.getByTestId('form-new-bill')).toBeInTheDocument()
       })
-    })
-    describe('When i click on an eye icon', () => {
-      test('Then it should render a modal', () => {
+      test('Then I can click on an eye icon to show a modal', () => {
         const html = BillsUI({ data: bills })
         document.body.innerHTML = html
 
