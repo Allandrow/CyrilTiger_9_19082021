@@ -125,10 +125,12 @@ describe('Given I am connected as an employee', () => {
     })
     test('fetches bills from mock API GET and add new bill to bills', async () => {
       const getSpy = jest.spyOn(firebase, 'get')
-      const bills = await firebase.get()
+      const addSpy = jest.spyOn(firebase, 'add')
+      let bills = await firebase.get()
       expect(getSpy).toHaveBeenCalledTimes(1)
       expect(bills.data.length).toBe(4)
-      bills.data.push(bill)
+      bills = await firebase.add(bill)
+      expect(addSpy).toHaveBeenCalled()
       expect(bills.data.length).toBe(5)
     })
     test('fetches bills from an API and fails with 404 message error', async () => {
