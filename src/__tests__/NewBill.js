@@ -102,7 +102,9 @@ describe('Given I am connected as an employee', () => {
 
 // Integration Test for POST
 describe('When I post a new bill', () => {
-  test('POST request to firestore', async () => {
+  let newBill
+  let bill
+  beforeAll(() => {
     const html = NewBillUI()
     document.body.innerHTML = html
 
@@ -115,13 +117,13 @@ describe('When I post a new bill', () => {
       add: jest.fn().mockImplementation((bill) => Promise.resolve({ data: bill }))
     }
 
-    const newBill = new NewBill({
+    newBill = new NewBill({
       document,
       onNavigate,
       firestore: mockFirestore,
       localStorage: null
     })
-    const bill = [
+    bill = [
       {
         id: 'BeKy5Mo4jkmdfPGYpTxZ',
         vat: '',
@@ -138,47 +140,15 @@ describe('When I post a new bill', () => {
         status: 'Pending'
       }
     ]
+  })
+  test('POST request to firestore', async () => {
     await newBill.createBill(bill)
-    expect(mockFirestore.add).toHaveBeenCalledWith(bill)
+    expect(newBill.firestore.add).toHaveBeenCalledWith(bill)
   })
   test('POST request to firestore with error on bills fetch', async () => {
-    const html = NewBillUI()
-    document.body.innerHTML = html
+    const error = new Error('error')
 
-    const onNavigate = (pathname) => {
-      document.body.innerHTML = ROUTES({ pathname })
-    }
-    const mockFirestore = {
-      bills: jest.fn().mockImplementation(() => Promise.reject(new Error('Erreur 404')))
-    }
-    const newBill = new NewBill({
-      document,
-      onNavigate,
-      firestore: mockFirestore,
-      localStorage: null
-    })
-    const bill = [
-      {
-        id: 'BeKy5Mo4jkmdfPGYpTxZ',
-        vat: '',
-        amount: 100,
-        name: 'new test',
-        fileName: 'test.jpeg',
-        commentary: 'post test',
-        pct: 20,
-        type: 'Transports',
-        email: 'abc@test.com',
-        fileUrl:
-          'https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…61.jpeg?alt=media&token=7685cd61-c112-42bc-9929-8a799bb82d8b',
-        date: '2021-09-02',
-        status: 'Pending'
-      }
-    ]
-    try {
-      await newBill.createBill(bill)
-    } catch (e) {
-      return e
-    }
-    expect(newBill.createBill(bill)).toMatch(/Erreur 404/i)
+    jest.spyOn(newBill, 'createBill').mockRejectedValueOnce(error)
+    await expect(newBill.createBill(bill)).rejects.toThrow(error)
   })
 })
