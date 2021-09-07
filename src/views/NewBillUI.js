@@ -13,7 +13,7 @@ export default () => {
             <div class="row">
                 <div class="col-md-6">
                   <div class="col-half">
-                    <label for="expense-type" class="bold-label">Type de dépense</label>
+                    <label for="expense-type" class="bold-label">Type de dépense *</label>
                       <select required class="form-control blue-border" data-testid="expense-type">
                         <option>Transports</option>
                         <option>Restaurants et bars</option>
@@ -29,11 +29,11 @@ export default () => {
                     <input type="text" class="form-control blue-border" data-testid="expense-name" placeholder="Vol Paris Londres" />
                   </div>
                   <div class="col-half">
-                    <label for="datepicker" class="bold-label">Date</label>
+                    <label for="datepicker" class="bold-label">Date *</label>
                     <input required type="date" class="form-control blue-border" data-testid="datepicker" />
                   </div>
                   <div class="col-half">
-                    <label for="amount" class="bold-label">Montant TTC </label>
+                    <label for="amount" class="bold-label">Montant TTC *</label>
                     <input required type="number" class="form-control blue-border input-icon input-icon-right" data-testid="amount" placeholder="348"/>
                   </div>
                   <div class="col-half-row">
@@ -42,7 +42,7 @@ export default () => {
                       <input type="number" class="form-control blue-border" data-testid="vat" placeholder="70" />
                     </div>
                     <div class="flex-col">
-                      <label for="pct" class="white-text">%</label>
+                      <label for="pct" class="white-text">% *</label>
                       <input required type="number" class="form-control blue-border" data-testid="pct" placeholder="20" />
                     </div>
                   </div>
@@ -53,7 +53,7 @@ export default () => {
                     <textarea class="form-control blue-border" data-testid="commentary" rows="3"></textarea>
                   </div>
                   <div class="col-half">
-                    <label for="file" class="bold-label">Justificatif</label>
+                    <label for="file" class="bold-label">Justificatif *</label>
                     <input required type="file" id="file" class="form-control blue-border" data-testid="file" accept=".png, .jpg, .jpeg" />
                     <span class="error">Votre justificatif doit être de type jpg, jpeg ou png.</span>
                   </div>
@@ -64,6 +64,13 @@ export default () => {
                 <div class="col-half">
                   <button type="submit" id='btn-send-bill' class="btn btn-primary">Envoyer</button>
                 </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="col-half">
+                  <span class="font-italic">* : champ requis</span>
+                </div> 
               </div>
             </div>
           </form>
