@@ -25,7 +25,6 @@ export default class NewBill {
     const fileExtension = fileSeparated[fileSeparated.length - 1]
     const validExtensions = ['jpg', 'jpeg', 'png']
     if (validExtensions.includes(fileExtension)) {
-      /* istanbul ignore next */
       this.firestore.storage
         .ref(`justificatifs/${fileName}`)
         .put(file)

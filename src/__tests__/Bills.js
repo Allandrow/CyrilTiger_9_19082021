@@ -76,7 +76,6 @@ describe('Given I am connected as an employee', () => {
           firestore: null,
           localStorage: window.localStorage
         })
-
         const spy = jest.spyOn(billsInstance, 'handleClickNewBill')
         const newBillBtn = screen.getByTestId('btn-new-bill')
         userEvent.click(newBillBtn)
