@@ -1,12 +1,11 @@
 import { screen } from '@testing-library/dom'
 import '@testing-library/jest-dom'
-import BillsUI from '../views/BillsUI.js'
-import { bills } from '../fixtures/bills.js'
-import Bills from '../containers/Bills.js'
+import BillsUI from '../views/BillsUI'
+import { bills } from '../fixtures/bills'
+import Bills from '../containers/Bills'
 import { ROUTES } from '../constants/routes'
-import { localStorageMock } from '../__mocks__/localStorage.js'
 import userEvent from '@testing-library/user-event'
-import firebase from '../__mocks__/firebase.js'
+import firebase from '../__mocks__/firebase'
 
 describe('Given I am connected as an employee', () => {
   // Integration test for GET
@@ -63,18 +62,11 @@ describe('Given I am connected as an employee', () => {
           document.body.innerHTML = ROUTES({ pathname })
         }
 
-        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-        window.localStorage.setItem(
-          'user',
-          JSON.stringify({
-            type: 'Employee'
-          })
-        )
         const billsInstance = new Bills({
           document,
           onNavigate,
           firestore: null,
-          localStorage: window.localStorage
+          localStorage: null
         })
         const spy = jest.spyOn(billsInstance, 'handleClickNewBill')
         const newBillBtn = screen.getByTestId('btn-new-bill')
@@ -90,18 +82,11 @@ describe('Given I am connected as an employee', () => {
           document.body.innerHTML = ROUTES({ pathname })
         }
 
-        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-        window.localStorage.setItem(
-          'user',
-          JSON.stringify({
-            type: 'Employee'
-          })
-        )
         const billsInstance = new Bills({
           document,
           onNavigate,
           firestore: null,
-          localStorage: window.localStorage
+          localStorage: null
         })
 
         $.fn.modal = jest.fn()
